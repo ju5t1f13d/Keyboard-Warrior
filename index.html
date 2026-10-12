@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyboard Warrior</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Keyboard Warrior</h1>
+    </header>
+
+    <main>
+        <section class="stats">
+            <div class="stat-box">
+                <p class="stat-label">Characters typed</p>
+                <p class="stat-value" id="typed-count">0</p>
+                <p class="stat-description">Lifetime total</p>
+            </div>
+
+            <div class="stat-box">
+                <p class="stat-label">Characters erased</p>
+                <p class="stat-value" id="erased-count">0</p>
+                <p class="stat-description">Lifetime total</p>
+            </div>
+
+            <div class="stat-box">
+                <p class="stat-label">Current characters</p>
+                <p class="stat-value" id="current-count">0</p>
+                <p class="stat-description">In this document</p>
+            </div>
+        </section>
+
+        <textarea
+            id="editor"
+            placeholder="Start typing here..."
+            spellcheck="false"
+        ></textarea>
+
+        <footer>
+            <span id="session-label">Session #1</span>
+            <span id="session-time">00:00:00</span>
+        </footer>
+    </main>
+    <script src="renderer.js"></script>
+</body>
+</html>

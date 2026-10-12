@@ -1,0 +1,92 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 28px;
+    font-family: "Segoe UI", sans-serif;
+    background: #ffffff;
+    color: #000000;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+}
+
+.stat-label {
+    margin: 0 0 10px;
+    color: #666666;
+    font-size: 13px;
+}
+
+.stat-value {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-description {
+    margin: 8px 0 0;
+    color: #777777;
+    font-size: 12px;
+}
+
+#editor {
+    width: 100%;
+    min-height: 350px;
+    padding: 20px;
+    resize: vertical;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    outline: none;
+    background: #ffffff;
+    color: #000000;
+    font: 15px/1.7 "Consolas", monospace;
+}
+
+#editor:focus {
+    border-color: #ffffff;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    color: #777777;
+    font-size: 12px;
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 16px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
