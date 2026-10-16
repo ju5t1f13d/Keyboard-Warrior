@@ -1,92 +1,154 @@
+
 * {
     box-sizing: border-box;
 }
 
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
 body {
     margin: 0;
-    padding: 28px;
+    min-height: 100vh;
+    padding: 24px;
     font-family: "Segoe UI", sans-serif;
-    background: #ffffff;
-    color: #000000;
+    background: #f2f2f5;
+    color: #202124;
 }
 
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
+.dashboard {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-h1 {
+.page-header {
+    margin-bottom: 18px;
+}
+
+.page-header h1 {
     margin: 0;
-    font-size: 25px;
-    font-weight: 600;
+    font-size: 26px;
+    font-weight: 650;
 }
 
-.stats {
+.page-header p {
+    margin: 6px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.editor-section {
+    width: 100%;
+    margin: 0 auto 20px;
+}
+
+#editor {
+    display: block;
+    width: 100%;
+    height: 300px;
+    min-height: 200px;
+    padding: 22px;
+    resize: vertical;
+    border: 1px solid #e5e5eb;
+    border-radius: 14px;
+    outline: none;
+    background: #fff;
+    color: #202124;
+    font: 15px/1.7 "Consolas", monospace;
+}
+
+#editor:focus {
+    border-color: #a0a0a0;
+}
+
+.stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 16px;
 }
 
 .stat-box {
-    padding: 18px;
-    background: #ffffff;
-    border: 1px solid #ffffff;
-    border-radius: 10px;
+    display: block;
+    min-width: 0;
+    padding: 22px;
+    background: #fff;
+    border: 1px solid #e5e5eb;
+    border-radius: 14px;
 }
 
 .stat-label {
-    margin: 0 0 10px;
-    color: #666666;
+    margin: 0 0 12px;
+    color: #666;
     font-size: 13px;
 }
 
 .stat-value {
     margin: 0;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
+    overflow-wrap: anywhere;
     font-variant-numeric: tabular-nums;
 }
 
 .stat-description {
-    margin: 8px 0 0;
-    color: #777777;
+    margin: 9px 0 0;
+    color: #888;
     font-size: 12px;
 }
 
-#editor {
-    width: 100%;
-    min-height: 350px;
-    padding: 20px;
-    resize: vertical;
-    border: 1px solid #ffffff;
-    border-radius: 10px;
-    outline: none;
-    background: #ffffff;
-    color: #000000;
-    font: 15px/1.7 "Consolas", monospace;
+.sessions-box {
+    grid-column: auto;
+    min-height: 180px;
 }
 
-#editor:focus {
-    border-color: #ffffff;
+.sessions-header {
+    margin-bottom: 18px;
 }
 
-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 14px;
-    color: #777777;
-    font-size: 12px;
+.sessions-header h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.sessions-header .stat-description {
+    margin-top: 5px;
+}
+
+.sessions-list {
+    max-height: 220px;
+    overflow-y: auto;
+    border-top: 1px solid #eee;
+}
+
+.empty-sessions {
+    margin: 0;
+    padding: 22px 0;
+    color: #999;
+    font-size: 13px;
+    text-align: center;
 }
 
 @media (max-width: 650px) {
     body {
+        padding: 14px;
+    }
+
+    .stats-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #editor {
+        height: 250px;
         padding: 16px;
     }
 
-    .stats {
-        grid-template-columns: 1fr;
+    .stat-box {
+        padding: 18px;
     }
 }

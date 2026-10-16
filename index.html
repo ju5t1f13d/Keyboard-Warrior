@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keyboard Warrior</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Keyboard Warrior</h1>
-    </header>
+    <main class="dashboard">
+        <header class="page-header">
+            <h1>Keyboard Warrior</h1>
+            <p>Your writing, tracked.</p>
+        </header>
 
-    <main>
-        <section class="stats">
+        <section class="editor-section">
+            <textarea
+                id="editor"
+                placeholder="Start typing here..."
+                spellcheck="false"
+            ></textarea>
+        </section>
+
+        <section class="stats-grid">
             <div class="stat-box">
                 <p class="stat-label">Characters typed</p>
                 <p class="stat-value" id="typed-count">0</p>
@@ -28,21 +37,32 @@
             <div class="stat-box">
                 <p class="stat-label">Current characters</p>
                 <p class="stat-value" id="current-count">0</p>
-                <p class="stat-description">In this document</p>
+                <p class="stat-description">In your document</p>
             </div>
+
+            <div class="stat-box session-current">
+                <p class="stat-label">Current session</p>
+                <p class="stat-value" id="session-label">Session #1</p>
+                <p class="stat-description">
+                    Time active: <span id="session-time">00:00:00</span>
+                </p>
+            </div>
+
+            <section class="stat-box sessions-box">
+                <div class="sessions-header">
+                    <div>
+                        <h2>Session history</h2>
+                        <p class="stat-description">Your previous writing sessions</p>
+                    </div>
+                </div>
+
+                <div class="sessions-list" id="sessions-list">
+                    <p class="empty-sessions">Session history will appear here.</p>
+                </div>
+            </section>
         </section>
-
-        <textarea
-            id="editor"
-            placeholder="Start typing here..."
-            spellcheck="false"
-        ></textarea>
-
-        <footer>
-            <span id="session-label">Session #1</span>
-            <span id="session-time">00:00:00</span>
-        </footer>
     </main>
+
     <script src="renderer.js"></script>
 </body>
 </html>
