@@ -68,12 +68,21 @@ ipcMain.handle("load-data", async () => {
     return readData();
 });
 
+
 ipcMain.handle("save-data", async (_event, data) => {
     const existing = await readData();
 
     existing.document = String(data.document ?? "");
     existing.totalTyped = Math.max(0, Number(data.totalTyped) || 0);
     existing.totalErased = Math.max(0, Number(data.totalErased) || 0);
+
+    const activeSession = existing.sessions?.find(
+        (session) => session.id === sessionId
+    );
+
+    if (activeSession) {
+        activeSession.document = existing.document;
+    }
 
     await writeData(existing);
 
@@ -92,12 +101,24 @@ ipcMain.handle("start-session", async () => {
     sessionId = `${Date.now()}`;
 
     data.sessions ??= [];
+    const previousSession = data.sessions[data.sessions.length - 1];
+
+    if(
+        previousSession &&
+        typeof previousSession.document !== "string" &&
+        typeof data.document === "string" &&
+        data.document.length > 0
+    ) {
+        previousSession.document = data.document;
+    }
+    
     data.sessions.push({
         id: sessionId,
         startedAt: sessionStartedAt,
         endedAt: null,
         durationSeconds: null,
-        status: "active"
+        status: "active",
+        document: ""
     });
 
     await writeData(data);
