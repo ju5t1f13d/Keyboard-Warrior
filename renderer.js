@@ -23,6 +23,7 @@ function updateDisplay() {
     currentCount.textContent = editor.value.length.toLocaleString();
 }
 
+
 function renderSessionHistory(sessions) {
     sessionsList.replaceChildren();
 
@@ -35,28 +36,13 @@ function renderSessionHistory(sessions) {
     }
 
     [...sessions].reverse().forEach((session, index) => {
-        const sessionItem = document.createElement("button");
+        const sessionItem = document.createElement("div");
         sessionItem.className = "session-item";
-        sessionItem.type = "button";
-
-        sessionItem.addEventListener("click", () => {
-            if (!viewingPastSession) {
-                currentSessionText = editor.value;
-            }
-
-            viewingPastSession = true;
-            returnToCurrentButton.hidden = false;
-            editor.readOnly = true;
-
-            editor.value = session.document || "";
-            previousText = editor.value;
-
-            updateDisplay();
-        });
 
         const sessionTitle = document.createElement("p");
         sessionTitle.className = "session-title";
-        sessionTitle.textContent = `Session #${sessions.length - index}`;
+        sessionTitle.textContent =
+            session.name || `Session #${sessions.length - index}`;
 
         const sessionDetails = document.createElement("p");
         sessionDetails.className = "stat-description";
@@ -68,10 +54,80 @@ function renderSessionHistory(sessions) {
         sessionDetails.textContent =
             `${characterCount.toLocaleString()} characters · ${session.status || "unknown"}`;
 
-        sessionItem.append(sessionTitle, sessionDetails);
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.textContent = "Open session";
+
+        openButton.addEventListener("click", () => {
+            if (!viewingPastSession) {
+                currentSessionText = editor.value;
+            }
+
+            viewingPastSession = true;
+            returnToCurrentButton.hidden = false;
+            editor.readOnly = true;
+            editor.value = session.document || "";
+            previousText = editor.value;
+
+            updateDisplay();
+        });
+
+        const renameButton = document.createElement("button");
+        renameButton.type = "button";
+        renameButton.textContent = "Rename";
+
+        renameButton.addEventListener("click", () => {
+            const renameDialog = document.getElementById("rename-dialog");
+            const renameInput = document.getElementById("rename-input");
+            const renameSave = document.getElementById("rename-save");
+            const renameCancel = document.getElementById("rename-cancel");
+
+            renameInput.value =
+                session.name || `Session #${sessions.length - index}`;
+
+            renameDialog.hidden = false;
+            renameInput.focus();
+
+            renameSave.onclick = async () => {
+                const newName = renameInput.value.trim();
+
+                if (!newName) {
+                    alert("Session name cannot be empty.");
+                    renameInput.focus();
+                    return;
+                }
+
+                try {
+                    await window.keyboardWarrior.renameSession(
+                        session.id,
+                        newName
+                    );
+
+                    session.name = newName;
+                    renameDialog.hidden = true;
+                    renderSessionHistory(sessions);
+                } catch (error) {
+                    console.error("Could not rename session:", error);
+                    alert("Could not rename this session. Check the console.");
+                }
+            };
+
+            renameCancel.onclick = () => {
+                renameDialog.hidden = true;
+            };
+        });
+
+        sessionItem.append(
+            sessionTitle,
+            sessionDetails,
+            openButton,
+            renameButton
+        );
+
         sessionsList.appendChild(sessionItem);
     });
 }
+
 
 function saveData() {
     if (!isReady || viewingPastSession) return;

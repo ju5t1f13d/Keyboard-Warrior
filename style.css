@@ -179,6 +179,22 @@ body {
     padding: 14px 16px;
     border: 1px solid var(--border-color, #444444);
     border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+}
+
+.session-item .session-title,
+.session-item .stat-description {
+    flex-basis: 100%;
+}
+
+.session-item button {
+    cursor: pointer;
+    align-items: flex-start;
 }
 
 .session-title {
@@ -204,3 +220,4 @@ body {
 #return-to-current[hidden] {
     display: none;
 }
+

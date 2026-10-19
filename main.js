@@ -89,6 +89,27 @@ ipcMain.handle("save-data", async (_event, data) => {
     return true;
 });
 
+ipcMain.handle("rename-session", async (_event, id, name) => {
+    const data = await readData();
+
+    const session = data.sessions?.find(
+        (session) => session.id === id
+    );
+
+    if (!session) {
+        throw new Error("Session not found.");
+    }
+
+    const trimmedName = String(name).trim();
+    if (!trimmedName) {
+        throw new Error("Sesson name cannot be empty.");
+    }
+
+    session.name = trimmedName;
+    await writeData(data);
+    return true;
+});
+
 ipcMain.handle("start-session", async () => {
     if (sessionStartedAt !== null) {
         return sessionId;
@@ -111,9 +132,10 @@ ipcMain.handle("start-session", async () => {
     ) {
         previousSession.document = data.document;
     }
-    
+
     data.sessions.push({
         id: sessionId,
+        name: `Session #${data.sessions.length + 1}`,
         startedAt: sessionStartedAt,
         endedAt: null,
         durationSeconds: null,

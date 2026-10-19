@@ -17,7 +17,7 @@
             <button id="return-to-current" type="button" hidden>
                 Return to current session
             </button>
-            
+
             <textarea
                 id="editor"
                 placeholder="Start typing here..."
@@ -50,6 +50,13 @@
                 <p class="stat-description">
                     Time active: <span id="session-time">00:00:00</span>
                 </p>
+            </div>
+
+            <div id="rename-dialog" hidden>
+                 <label for="rename-input">New session name</label>
+                 <input id="rename-input" type="text" />
+                 <button id="rename-save" type="button">Save name</button>
+               <button id="rename-cancel" type="button">Cancel</button>
             </div>
 
             <section class="stat-box sessions-box">
