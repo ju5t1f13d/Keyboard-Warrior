@@ -199,6 +199,10 @@ body {
     opacity: 0.8;
 }
 
+.session-item button:last-child {
+    margin-left: auto;
+}
+
 .session-title {
     margin: 0 0 6px;
     font-weight: 600;
