@@ -102,10 +102,31 @@ ipcMain.handle("rename-session", async (_event, id, name) => {
 
     const trimmedName = String(name).trim();
     if (!trimmedName) {
-        throw new Error("Sesson name cannot be empty.");
+        throw new Error("Session name cannot be empty.");
     }
 
     session.name = trimmedName;
+    await writeData(data);
+    return true;
+});
+
+ipcMain.handle("delete-session", async (_event, id) => {
+    const data = await readData();
+
+    const sessionIndex = data.sessions?.findIndex(
+        session => session.id === id
+    );
+
+    if (sessionIndex === undefined || sessionIndex === -1) {
+        throw new Error("Session not found.");
+    }
+
+    if (data.sessions[sessionIndex].status === "active") {
+        throw new Error("Cannot delete an active session.");
+    }
+
+    data.sessions.splice(sessionIndex, 1);
+
     await writeData(data);
     return true;
 });
@@ -122,6 +143,30 @@ ipcMain.handle("start-session", async () => {
     sessionId = `${Date.now()}`;
 
     data.sessions ??= [];
+
+    const highestExistingNumber = data.sessions.reduce((highest, session) => {
+        const savedNumber = Number(session.sessionNumber) || 0;
+        
+        const nameMatch = typeof session.name === "string"
+        ? session.name.match(/Session #(\d+)$/)
+        : null;
+
+        const nameNumber = nameMatch ? Number(nameMatch[1]) : 0;
+
+        return Math.max(highest, savedNumber, nameNumber);
+    }, 0
+);
+
+    data.nextSessionNumber = Math.max(
+        Number(data.nextSessionNumber) || 1,
+        highestExistingNumber + 1);
+
+         const newSessionNumber = data.nextSessionNumber;
+        data.nextSessionNumber = newSessionNumber + 1;
+
+    sessionStartedAt = now.toISOString();
+    sessionId = `${Date.now()}`;
+
     const previousSession = data.sessions[data.sessions.length - 1];
 
     if(
@@ -135,7 +180,8 @@ ipcMain.handle("start-session", async () => {
 
     data.sessions.push({
         id: sessionId,
-        name: `Session #${data.sessions.length + 1}`,
+        sessionNumber: newSessionNumber,
+        name: `Session #${newSessionNumber}`,
         startedAt: sessionStartedAt,
         endedAt: null,
         durationSeconds: null,

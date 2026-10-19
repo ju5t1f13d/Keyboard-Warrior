@@ -83,7 +83,7 @@ function renderSessionHistory(sessions) {
             const renameCancel = document.getElementById("rename-cancel");
 
             renameInput.value =
-                session.name || `Session #${sessions.length - index}`;
+                session.name || `Session #${session.sessionNumber ?? sessions.length - index}`
 
             renameDialog.hidden = false;
             renameInput.focus();
@@ -117,11 +117,43 @@ function renderSessionHistory(sessions) {
             };
         });
 
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener("click", async () => {
+            const confirmed = confirm(
+                `Delete "${session.name}" permanently? This cannot be undone.`
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+                await window.keyboardWarrior.deleteSession(session.id);
+
+                const sessionIndex = sessions.findIndex(
+                    item => item.id === session.id
+                );
+
+                if (sessionIndex !== -1) {
+                    sessions.splice(sessionIndex, 1);
+                }
+
+                renderSessionHistory(sessions);
+            } catch (error) {
+                console.error("Could not delete session:". error);
+                alert("Could not delete this session. Check the console.");
+            }
+        });
+
         sessionItem.append(
             sessionTitle,
             sessionDetails,
             openButton,
-            renameButton
+            renameButton,
+            deleteButton
         );
 
         sessionsList.appendChild(sessionItem);
