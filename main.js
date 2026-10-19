@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
@@ -218,6 +218,81 @@ ipcMain.handle("end-session", async () => {
     sessionId = null;
 
     return true;
+});
+
+ipcMain.handle("export-session-pdf", async (_event, sessionId) => {
+    const data = await readData();
+    const session = data.sessions?.find(
+        (item) => item.id === sessionId
+    );
+
+    if (!session) {
+        throw new Error("Session not found.");
+    }
+
+    const result = await dialog.showSaveDialog({
+        title: "Save session as PDF",
+        defaultPath: `${session.name || "Writing Session"}.pdf`,
+        filters: [
+            { name: "PDF Files", extensions: ["pdf"]}
+        ]
+    });
+
+    if (result.canceled || !result.filePath) {
+        return false;
+    }
+
+    const pdfWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: false
+        }
+    });
+
+    try {
+        const escapeHtml = (text) =>
+            String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+        const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body {
+                        font-family: "Courier New", monospace;
+                        font-size: 12pt;
+                        line-height: 1.6;
+                        padding: 24px;
+                        white-space: pre-wrap;
+                        overflow-wrap: anywhere;
+                    }
+                </style>
+            </head>
+            <body>${escapeHtml(session.document || "")}</body>
+            </html>
+        `;
+
+        await pdfWindow.loadURL(
+            "data:text/html;charset=utf-8," +
+            encodeURIComponent(html)
+        );
+
+        const pdf = await pdfWindow.webContents.printToPDF({
+            printBackground: true,
+            pageSize: "A4"
+        });
+
+        await fs.writeFile(result.filePath, pdf);
+        return true;
+    } finally {
+        pdfWindow.destroy();
+    }
 });
 
 app.whenReady().then(async () => {

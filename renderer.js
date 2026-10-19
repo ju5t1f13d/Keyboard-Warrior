@@ -117,6 +117,22 @@ function renderSessionHistory(sessions) {
             };
         });
 
+        const downloadButton = document.createElement("button");
+        downloadButton.type = "button";
+        downloadButton.classList.add("download-button");
+        downloadButton.textContent = "↓";
+        downloadButton.title = "Download session as PDF";
+        downloadButton.setAttribute("aria-label", "Download session as PDF");
+
+        downloadButton.addEventListener("click", async () => {
+            try {
+                await window.keyboardWarrior.exportSessionPdf(session.id);
+            } catch (error) {
+                console.error("Could not export session PDF:", error);
+                alert("Could not export this session as a PDF. Check the console.");
+            }
+        });
+
         const deleteButton = document.createElement("button");
         deleteButton.type = "button";
         deleteButton.textContent = "Delete";
@@ -149,6 +165,7 @@ function renderSessionHistory(sessions) {
         });
 
         sessionItem.append(
+            downloadButton,
             sessionTitle,
             sessionDetails,
             openButton,
