@@ -182,7 +182,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
     text-align: center;
     gap: 10px;
 }
@@ -194,7 +194,9 @@ body {
 
 .session-item button {
     cursor: pointer;
-    align-items: flex-start;
+    align-self: flex-start;
+    font-family: 'Courier New', Courier, monospace;
+    opacity: 0.8;
 }
 
 .session-title {
