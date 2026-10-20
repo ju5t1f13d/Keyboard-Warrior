@@ -325,3 +325,93 @@ body {
 #settings-back:hover {
     background: rgba(127, 127, 127, 0.15);
 }
+
+.setting-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #ffffff;
+}
+
+.setting-option h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+}
+
+.setting-option p {
+    margin: 0;
+    font-size: 13px;
+    color: #666666;
+}
+
+.theme-toggle {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: 46px;
+    height: 26px;
+}
+
+.theme-toggle input {
+    opacity: 1;
+    width: 16px;
+    height: 16px;
+}
+
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    background-color: #ffffff;
+    border-radius: 26px;
+    transition: background 0.3s ease;
+}
+
+.toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: #cccccc;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle input:checked + .toggle-slider {
+    background: #333333;
+}
+
+.theme-toggle input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.theme-toggle input:focus-visible + .toggle-slider {
+    outline: 2px solid #666666;
+    outline-offset: 3px;
+}
+
+body.dark-theme {
+    background: #121212;
+    color: #ffffff;
+}
+
+body.dark-theme .settings-panel {
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-theme .setting-option {
+    border-bottom-color: #444444;
+}
+
+body.dark-theme .setting-option p {
+    color: #ffffff;
+}
+
+body.dark-theme .settings-header {
+    border-bottom-color: #444444;
+}

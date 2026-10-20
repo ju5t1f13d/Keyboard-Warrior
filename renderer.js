@@ -12,6 +12,7 @@ const savePastSessionButton = document.getElementById("save-past-session");
 const settingsButton = document.getElementById("settings-button");
 const settingsPanel = document.getElementById("settings-panel");
 const settingsBackButton = document.getElementById("settings-back");
+const darkThemeToggle = document.getElementById("dark-theme-toggle");
 
 let totalTyped = 0;
 let totalErased = 0;
@@ -401,4 +402,8 @@ settingsBackButton.addEventListener("click", () => {
     settingsPanel.classList.remove("is-open");
     settingsPanel.setAttribute("aria-hidden", "true");
     settingsPanel.inert = true;
+});
+
+darkThemeToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-theme", darkThemeToggle.checked);
 });
