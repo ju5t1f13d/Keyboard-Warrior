@@ -1,4 +1,5 @@
 const editor = document.getElementById("editor");
+const autosaveStatus = document.getElementById("autosave-status");
 
 const typedCount = document.getElementById("typed-count");
 const erasedCount = document.getElementById("erased-count");
@@ -13,6 +14,7 @@ let totalErased = 0;
 let previousText = "";
 let isReady = false;
 let saveQueue = Promise.resolve();
+let latestSaveRequest = 0;
 let sessionStartedAt = null;
 let viewingPastSession = false;
 let currentSessionText = "";
@@ -187,11 +189,23 @@ function saveData() {
         totalErased
     };
 
+    const saveRequestId = ++latestSaveRequest;
+    autosaveStatus.textContent = "Saving...";
+
     saveQueue = saveQueue
         .catch(() => {})
         .then(() => window.keyboardWarrior.saveData(data))
+        .then(() => {
+            if (saveRequestId === latestSaveRequest) {
+                autosaveStatus.textContent = "Saved";
+            }
+        })
         .catch((error) => {
             console.error("Could not save Keyboard Warrior data:", error);
+
+            if (saveRequestId === latestSaveRequest) {
+                autosaveStatus.textContent = "Save failed";
+            }
         });
 }
 
