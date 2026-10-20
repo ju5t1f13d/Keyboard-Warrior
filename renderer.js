@@ -404,6 +404,14 @@ settingsBackButton.addEventListener("click", () => {
     settingsPanel.inert = true;
 });
 
+const savedDarkTheme = localStorage.getItem("darkTheme") === "true";
+
+document.body.classList.toggle("dark-theme", savedDarkTheme);
+darkThemeToggle.checked = savedDarkTheme;
+
 darkThemeToggle.addEventListener("change", () => {
-    document.body.classList.toggle("dark-theme", darkThemeToggle.checked);
+    const isDarkTheme = darkThemeToggle.checked;
+
+    document.body.classList.toggle("dark-theme", isDarkTheme);
+    localStorage.setItem("darkTheme", isDarkTheme);
 });
