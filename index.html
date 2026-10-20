@@ -9,8 +9,16 @@
 <body>
     <main class="dashboard">
         <header class="page-header">
+            <div class="header-top">
+                <div>
             <h1>Keyboard Warrior</h1>
             <p>Your writing. Yeah. Just your writing.</p>
+            </div>
+
+            <button id="settings-button" type="button" aria-label="Open Settings">
+                ⚙
+            </button>
+            </div>
         </header>
 
         <section class="editor-section">
@@ -78,6 +86,18 @@
                 </div>
             </section>
         </section>
+
+        <section id="settings-panel" class="settings-panel" aria-label="settings" aria-hidden="true" inert>
+            <header class="settings-header">
+                <button id="settings-back" type="button" aria-label="Back to editor">
+                    ←
+                </button>
+
+                <h2>Settings</h2>
+                
+            </header>
+        </section>
+
     </main>
 
     <script src="renderer.js"></script>

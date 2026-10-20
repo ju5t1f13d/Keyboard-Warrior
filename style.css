@@ -24,6 +24,30 @@ body {
     margin-right: auto;
 }
 
+.header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#settings-button {
+    border: none;
+    background: transparent;
+    color: #777777;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    line-height: 1;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#settings-button:hover {
+    background: rgba(127, 127, 127, 0.15);
+    transform: rotate(30deg);
+}
+
 .page-header {
     margin-bottom: 18px;
 }
@@ -255,4 +279,49 @@ body {
     position: relative;
     top: -5px;
     font-size: 12px;
+}
+
+.settings-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #ffffff;
+    padding: 24px;
+    box-sizing: border-box;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    visibility: hidden;
+}
+
+.settings-panel.is-open {
+    transform: translateX(0%);
+    visibility: visible;
+    transition: transform 0.3s ease, visibility 0s;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.settings-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#settings-back {
+    border: none;
+    background: transparent;
+    color: #444444;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1001;
+}
+
+#settings-back:hover {
+    background: rgba(127, 127, 127, 0.15);
 }

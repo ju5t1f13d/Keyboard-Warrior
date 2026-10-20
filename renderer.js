@@ -9,6 +9,9 @@ const sessionTime = document.getElementById("session-time");
 const sessionsList = document.getElementById("sessions-list");
 const returnToCurrentButton = document.getElementById("return-to-current");
 const savePastSessionButton = document.getElementById("save-past-session");
+const settingsButton = document.getElementById("settings-button");
+const settingsPanel = document.getElementById("settings-panel");
+const settingsBackButton = document.getElementById("settings-back");
 
 let totalTyped = 0;
 let totalErased = 0;
@@ -385,4 +388,17 @@ savePastSessionButton.addEventListener("click", async () => {
     } finally {
         savePastSessionButton.disabled = false;
     }
+});
+
+settingsButton.addEventListener("click", () => {
+    settingsPanel.classList.add("is-open");
+    settingsPanel.setAttribute("aria-hidden", "false");
+    settingsPanel.inert = false;
+});
+
+settingsBackButton.addEventListener("click", () => {
+    console.log("Back button clicked");
+    settingsPanel.classList.remove("is-open");
+    settingsPanel.setAttribute("aria-hidden", "true");
+    settingsPanel.inert = true;
 });
