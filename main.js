@@ -110,6 +110,22 @@ ipcMain.handle("rename-session", async (_event, id, name) => {
     return true;
 });
 
+ipcMain.handle("save-past-session", async (_event, id, document) => {
+    const data = await readData();
+
+    const session = data.sessions?.find(
+        (session) => session.id === id
+    );
+
+    if (!session) {
+        throw new Error("Session not found.");
+    }
+
+    session.document = String(document);
+    await writeData(data);
+    return true;
+});
+
 ipcMain.handle("delete-session", async (_event, id) => {
     const data = await readData();
 

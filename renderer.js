@@ -8,6 +8,7 @@ const sessionLabel = document.getElementById("session-label");
 const sessionTime = document.getElementById("session-time");
 const sessionsList = document.getElementById("sessions-list");
 const returnToCurrentButton = document.getElementById("return-to-current");
+const savePastSessionButton = document.getElementById("save-past-session");
 
 let totalTyped = 0;
 let totalErased = 0;
@@ -18,6 +19,9 @@ let latestSaveRequest = 0;
 let sessionStartedAt = null;
 let viewingPastSession = false;
 let currentSessionText = "";
+let editingSessionId = null;
+let sessionHistory = [];
+let pastSessionHasUnsavedChanges = false;
 
 function updateDisplay() {
     typedCount.textContent = totalTyped.toLocaleString();
@@ -61,15 +65,26 @@ function renderSessionHistory(sessions) {
         openButton.textContent = "Open session";
 
         openButton.addEventListener("click", () => {
-            if (!viewingPastSession) {
-                currentSessionText = editor.value;
+            if (!viewingPastSession && pastSessionHasUnsavedChanges) {
+                const discardChanges = confirm(
+                    "You have unsaved changes. Open another session without saving them?"
+                );
+
+                if (!discardChanges) {
+                    return;
+                }
             }
 
             viewingPastSession = true;
+            editingSessionId = session.id;
+            pastSessionHasUnsavedChanges = false;
             returnToCurrentButton.hidden = false;
-            editor.readOnly = true;
+            savePastSessionButton.hidden = false;
+            savePastSessionButton.disabled = false;
+            editor.readOnly = false;
             editor.value = session.document || "";
             previousText = editor.value;
+            autosaveStatus.textContent = "Saved";
 
             updateDisplay();
         });
@@ -267,9 +282,9 @@ async function initialize() {
     try {
         const data = await window.keyboardWarrior.loadData();
 
-        renderSessionHistory(
-            Array.isArray(data.sessions) ? data.sessions : []
-        );
+        sessionHistory = Array.isArray(data.sessions) ? data.sessions : [];
+        renderSessionHistory(sessionHistory);
+
 
         totalTyped = Math.max(0, Number(data.totalTyped) || 0);
         totalErased = Math.max(0, Number(data.totalErased) || 0);
@@ -300,18 +315,74 @@ async function initialize() {
     }
 }
 
-editor.addEventListener("input", updateCounts);
+editor.addEventListener("input", () => {
+    if (viewingPastSession) {
+        pastSessionHasUnsavedChanges = true;
+        autosaveStatus.textContent = "Unsaved changes";
+        return;
+    }
+
+    updateCounts();
+});
 
 initialize();
 
 returnToCurrentButton.addEventListener("click", () => {
+    if (pastSessionHasUnsavedChanges) {
+        const discardChanges = confirm(
+            "You have unsaved changes. Leave without saving them?"
+        );
+
+        if (!discardChanges) {
+            return;
+        }
+    }
+
     viewingPastSession = false;
+    editingSessionId = null;
+    pastSessionHasUnsavedChanges = false;
 
     editor.value = currentSessionText;
     previousText = editor.value;
 
     editor.readOnly = false;
     returnToCurrentButton.hidden = true;
+    savePastSessionButton.hidden = true;
+    autosaveStatus.textContent = "Saved";
 
     updateDisplay();
+});
+
+savePastSessionButton.addEventListener("click", async () => {
+    if (!editingSessionId || !viewingPastSession) {
+        return;
+    }
+
+    savePastSessionButton.disabled = true;
+    autosaveStatus.textContent = "Saving...";
+
+    try {
+        await window.keyboardWarrior.savePastSession(
+            editingSessionId,
+            editor.value
+        );
+
+        const session = sessionHistory.find(
+            (item) => item.id === editingSessionId
+        );
+
+        if (session) {
+            session.document = editor.value;
+        }
+
+        renderSessionHistory(sessionHistory);
+        pastSessionHasUnsavedChanges = false;
+        autosaveStatus.textContent = "Saved";
+    } catch (error) {
+        console.error("Could not save previous session:", error);
+        autosaveStatus.textContent = "Save Failed";
+        alert("Could not save this session. Check the console.");
+    } finally {
+        savePastSessionButton.disabled = false;
+    }
 });
