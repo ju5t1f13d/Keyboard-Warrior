@@ -68,6 +68,18 @@ ipcMain.handle("load-data", async () => {
     return readData();
 });
 
+ipcMain.handle("load-themes", async () => {
+    const themesFolder = path.join(__dirname, "Themes");
+
+    try {
+        const files = await fs.readdir(themesFolder);
+        return files.filter(file => file.endsWith(".css"));
+    } catch (error) {
+        console.error("Failed to load themes:", error);
+        return [];
+    }
+});
+
 
 ipcMain.handle("save-data", async (_event, data) => {
     const existing = await readData();

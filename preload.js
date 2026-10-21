@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld("keyboardWarrior", {
     deleteSession: (id) => ipcRenderer.invoke("delete-session", id),
     exportSessionPdf: (sessionId) => ipcRenderer.invoke("export-session-pdf", sessionId),
     startSession: () => ipcRenderer.invoke("start-session"),
-    endSession: () => ipcRenderer.invoke("end-session")
+    endSession: () => ipcRenderer.invoke("end-session"),
+    loadThemes: () => ipcRenderer.invoke("load-themes")
 });

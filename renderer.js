@@ -415,3 +415,35 @@ darkThemeToggle.addEventListener("change", () => {
     document.body.classList.toggle("dark-theme", isDarkTheme);
     localStorage.setItem("darkTheme", isDarkTheme);
 });
+
+async function loadThemePalettes() {
+    const paletteManager = document.getElementById("palette-manager");
+    const emptyMessage = document.getElementById("palette-empty-message");
+
+    try {
+        const themes = await window.keyboardWarrior.loadThemes();
+        paletteManager.innerHTML = "";
+
+        if (themes.length === 0) {
+            emptyMessage.textContent = "No palettes found.";
+            paletteManager.appendChild(emptyMessage);
+            return;
+        }
+
+        themes.forEach(file => {
+            const themeName = file.replace(/\.css$/i, "");
+            const themeOption = document.createElement("details");
+            themeOption.className = "palette-option";
+            const themeSummary = document.createElement("summary");
+            themeSummary.textContent = themeName;
+            
+            themeOption.appendChild(themeSummary);
+            paletteManager.appendChild(themeOption);
+        });
+    } catch (error) {
+        console.error("Failed to display palettes:", error);
+        emptyMessage.textContent = "Unable to load palettes.";
+    }
+}
+
+loadThemePalettes();
